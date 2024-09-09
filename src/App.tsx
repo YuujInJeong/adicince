@@ -1,17 +1,16 @@
-// src/App.tsx
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import LoginComponent from './components/LoginComponent';
-import GoalInput from './components/GoalInput';
-import Calendar from './components/Calendar';
-import TaskList from './components/TaskList';
-import { getChatbotResponse } from './api/chatbot';
-import { addTaskToNaverCalendar } from './api/naverCalendar';
-import { parseChatbotResponse } from './utils/chatbotResponseParser';
-import { Task } from './types';
-import { Container, Card, Heading } from './styles/StyledComponents';
-import GlobalStyle from './styles/globalStyles';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import LoginComponent from "./components/LoginComponent";
+import GoalInput from "./components/GoalInput";
+import Calendar from "./components/Calendar";
+import TaskList from "./components/TaskList";
+import { getChatbotResponse } from "./api/chatbot";
+import { addTaskToNaverCalendar } from "./api/naverCalendar";
+import { parseChatbotResponse } from "./utils/chatbotResponseParser";
+import { Task } from "./types";
+import { Container, Card, Heading } from "./styles/StyledComponents";
+import GlobalStyle from "./styles/globalStyles";
 
 const ErrorMessage = styled.div`
   color: red;
@@ -26,7 +25,7 @@ const AppContent: React.FC = () => {
 
   useEffect(() => {
     if (!process.env.REACT_APP_CLOVA_STUDIO_API_KEY) {
-      setError('API 키가 설정되지 않았습니다. .env 파일을 확인해주세요.');
+      setError("API 키가 설정되지 않았습니다. .env 파일을 확인해주세요.");
     }
     setIsLoading(false);
   }, []);
@@ -35,7 +34,7 @@ const AppContent: React.FC = () => {
     try {
       const response = await getChatbotResponse(goal);
       const newTasks = parseChatbotResponse(response);
-      setTasks(prevTasks => [...prevTasks, ...newTasks]);
+      setTasks((prevTasks) => [...prevTasks, ...newTasks]);
 
       if (isAuthenticated && accessToken) {
         for (const task of newTasks) {
@@ -43,8 +42,8 @@ const AppContent: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Error processing goal:', error);
-      setError('목표 처리 중 오류가 발생했습니다.');
+      console.error("Error processing goal:", error);
+      setError("목표 처리 중 오류가 발생했습니다.");
     }
   };
 
@@ -61,15 +60,19 @@ const AppContent: React.FC = () => {
           <Card>
             <LoginComponent />
           </Card>
-          <Card>
-            <GoalInput onSubmit={handleGoalSubmit} />
-          </Card>
-          <Card>
-            <Calendar tasks={tasks} />
-          </Card>
-          <Card>
-            <TaskList tasks={tasks} />
-          </Card>
+          {isAuthenticated && (
+            <>
+              <Card>
+                <GoalInput onSubmit={handleGoalSubmit} />
+              </Card>
+              <Card>
+                <Calendar tasks={tasks} />
+              </Card>
+              <Card>
+                <TaskList tasks={tasks} />
+              </Card>
+            </>
+          )}
         </>
       )}
     </Container>
