@@ -1,3 +1,4 @@
+// src/App.tsx
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -9,12 +10,8 @@ import { getChatbotResponse } from './api/chatbot';
 import { addTaskToNaverCalendar } from './api/naverCalendar';
 import { parseChatbotResponse } from './utils/chatbotResponseParser';
 import { Task } from './types';
-
-const AppContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-`;
+import { Container, Card, Heading } from './styles/StyledComponents';
+import GlobalStyle from './styles/globalStyles';
 
 const ErrorMessage = styled.div`
   color: red;
@@ -52,31 +49,38 @@ const AppContent: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <Container>로딩 중...</Container>;
   }
 
   return (
-    <>
-      <h1>Todo Mate</h1>
+    <Container>
+      <Heading>Todo Mate</Heading>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {!error && (
         <>
-          <LoginComponent />
-          <GoalInput onSubmit={handleGoalSubmit} />
-          <Calendar tasks={tasks} />
-          <TaskList tasks={tasks} />
+          <Card>
+            <LoginComponent />
+          </Card>
+          <Card>
+            <GoalInput onSubmit={handleGoalSubmit} />
+          </Card>
+          <Card>
+            <Calendar tasks={tasks} />
+          </Card>
+          <Card>
+            <TaskList tasks={tasks} />
+          </Card>
         </>
       )}
-    </>
+    </Container>
   );
 };
 
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <AppContainer>
-        <AppContent />
-      </AppContainer>
+      <GlobalStyle />
+      <AppContent />
     </AuthProvider>
   );
 };
