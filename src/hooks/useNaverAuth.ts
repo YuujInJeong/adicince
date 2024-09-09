@@ -26,5 +26,4 @@ export const useNaverAuth = () => {
   };
 };
 
-// 기존의 useAuth를 그대로 내보내기
 export { useAuth } from '../contexts/AuthContext';
