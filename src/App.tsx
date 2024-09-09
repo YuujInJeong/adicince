@@ -6,6 +6,7 @@ import LoginComponent from './components/LoginComponent';
 import GoalInput from './components/GoalInput';
 import Calendar from './components/Calendar';
 import TaskList from './components/TaskList';
+import Callback from './components/Callback';
 import { getChatbotResponse } from './api/chatbot';
 import { addTaskToNaverCalendar } from './api/naverCalendar';
 import { parseChatbotResponse } from './utils/chatbotResponseParser';
@@ -23,12 +24,20 @@ const AppContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
   const { isAuthenticated, accessToken } = useAuth();
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
     if (!process.env.REACT_APP_CLOVA_STUDIO_API_KEY) {
       setError('API 키가 설정되지 않았습니다. .env 파일을 확인해주세요.');
     }
     setIsLoading(false);
+
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleGoalSubmit = async (goal: string) => {
@@ -50,6 +59,10 @@ const AppContent: React.FC = () => {
 
   if (isLoading) {
     return <Container>로딩 중...</Container>;
+  }
+
+  if (currentPath === '/auth/callback') {
+    return <Callback />;
   }
 
   return (

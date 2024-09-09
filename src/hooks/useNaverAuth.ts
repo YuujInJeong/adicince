@@ -1,4 +1,3 @@
-// src/hooks/useNaverAuth.ts
 import { useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { initiateNaverLogin, getNaverToken } from '../api/naverAuth';
@@ -14,8 +13,10 @@ export const useNaverAuth = () => {
     try {
       const token = await getNaverToken(code, state);
       authLogin(token);
+      return true; // 성공 시 true 반환
     } catch (error) {
       console.error('Failed to complete Naver login:', error);
+      return false; // 실패 시 false 반환
     }
   }, [authLogin]);
 
